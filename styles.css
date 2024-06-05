@@ -1,0 +1,212 @@
+@font-face {
+    font-family: 'DIN Condensed';
+    src: url('/fonts/DINCondensed-Regular.woff2') format('woff2'),
+         url('/fonts/DINCondensed-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    --secondary-background: #111212;
+    --background-color: #040607ec;
+    --primary-color: #ffffff;
+    --secondary-color: #aeaaaa;
+    --primary-size: 2.5rem;
+    --secondary-size: 1.4rem;
+    /* font-family: sans-serif; */
+   font-family: 'DIN Condensed', sans-serif;
+
+}
+body{
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--background-color) ;
+    color: var(--primary-color);
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 2.5rem;
+
+}
+h1{
+    font-size: 4rem;
+    font-family: "Poppins", sans-serif serif;
+    margin-top: 3rem;
+    text-align: center;
+    animation: nyeganyega 6s linear infinite forwards;
+    transition: transform 0.4s ease-in-out;
+}
+@keyframes nyeganyega {
+    0%{
+        transform: rotate(0deg);
+        opacity: 1;
+    }
+    25%{
+        transform: rotate(2.5deg);
+        opacity: 0.3;
+    }
+    50%{
+        transform: rotate(5deg);
+        opacity: 0.6;
+    }
+    75%{
+        transform: rotate(2.5deg);
+        opacity: 0.35;
+    }
+    100%{
+        transform: rotate(0deg);
+        opacity: 1;
+    }
+    
+}
+p{
+    color: var(--secondary-color);
+    font-size: var(--secondary-size);
+    text-align: center;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 30px 40px;
+    border-radius: 0.5rem;
+    transition: height 0.4s ease-in-out;
+    height: 100%;
+    border: 1.5px var(--secondary-color ) solid;
+    min-width: 50%;
+
+}
+form div{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.hideForm{
+    display: none;
+}
+form input, textarea{
+    padding: 0.5rem;
+    height: 2.4rem;
+    background-color: transparent;
+    outline: none;
+    border: 1px var(--secondary-color) solid;
+    color: var(--primary-color);
+    padding-left: 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+textarea{
+    height: 5rem;
+}
+::-webkit-file-upload-button{
+    background-color: transparent;
+    border: none;
+    display: none;
+}
+button{
+    padding: 0.5rem 0;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bolder;
+    font-size: 1.2rem;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+#createMemo{
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+button:hover{
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px var(--secondary-color) solid;
+}
+.container{
+    display: flex;
+    background-color: var(--secondary-background);
+    padding: 0.125rem;
+    gap: 0.1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    white-space: nowrap; 
+    justify-content: center;
+    padding-bottom: 2rem;
+
+}
+.container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.container::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+.container div {
+    width: 24%;
+    transition: all  0.3s ease-in-out; 
+    position: relative;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.container div:hover img{
+    filter: grayscale(100%) blur(3.4px);
+    transform: scale(102%);
+}
+
+.caption{
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    width: 80%;
+    position: absolute;
+    left: 1.5rem;
+    bottom: 8rem;
+}
+.caption p{
+    text-align: left;
+    font-size: 0.8rem;
+}
+a{
+    color: #00c3ffe6;
+    visibility: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 1.5rem;
+    text-decoration: none;
+}
+.container div:hover .caption{
+    bottom: 9rem;
+}
+.container div:hover a{
+    visibility: visible;
+}
+
+@media screen  and (width < 640px){
+.container{
+    width: 100%;
+    display: grid; 
+    grid-template-columns: repeat('auto-fit', minmax(180px, 1fr));
+    gap: 0.25rem;
+    overflow-x: hidden;
+}
+.container div{
+    width: 100%;
+}
+.container div img{
+    width: 100%;
+} 
+}

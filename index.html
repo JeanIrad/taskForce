@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script
+      src="https://kit.fontawesome.com/79b8b085c2.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <h1>Welcome to your favorite Gallery</h1>
+    <p>Upload your favorite photos and enjoy the Gallery</p>
+    <div class="createGallery">
+      <button id="createMemo">Add Memory</button>
+      <form action="" id="myForm" class="hideForm">
+        <div>
+          <span>Upload Image(s)</span>
+          <input type="file" multiple accept=".jpeg,.png,.jpg" id="files" />
+        </div>
+        <div>
+          <span>Memory Title</span>
+          <input type="text" placeholder="Type Photo title" id="title" />
+        </div>
+        <div>
+          <span>Location</span>
+          <input type="text" placeholder="Type photo Location" id="location" />
+        </div>
+        <div>
+          <span>Description</span>
+          <textarea id="description" placeholder="Photo description"></textarea>
+        </div>
+
+        <button type="submit">Create a Memory</button>
+      </form>
+    </div>
+    <div class="container">
+      <div class="image-wrapper">
+        <img src="./images/1.png" alt="#" />
+        <div class="caption">
+          <h2>FENNEC FOX</h2>
+          <p>India</p>
+        </div>
+        <a href="./description.html?id=fox"
+          >Know More <i class="fa-solid fa-arrow-right"></i
+        ></a>
+      </div>
+
+      <div>
+        <img src="./images/2.png" alt="#" />
+        <div class="caption">
+          <h2>SPOTTED DEER</h2>
+          <p>Amazon</p>
+        </div>
+        <a href="./description.html?id=deer"
+          >Know More <i class="fa-solid fa-arrow-right"></i
+        ></a>
+      </div>
+      <div>
+        <img src="./images/3.png" alt="#" />
+        <div class="caption">
+          <h2>COMMON BROWN BABOON</h2>
+          <p>South Africa</p>
+        </div>
+        <a href="./description.html?id=baboon"
+          >Know More <i class="fa-solid fa-arrow-right"></i
+        ></a>
+      </div>
+      <div>
+        <img src="./images/4.png" alt="#" />
+        <div class="caption">
+          <h2>HUMPBACK WHALE</h2>
+          <p>South Africa</p>
+        </div>
+        <a href="./description.html?id=whale"
+          >Know More <i class="fa-solid fa-arrow-right"></i
+        ></a>
+      </div>
+    </div>
+
+    <script src="./scripts/scripts.js"></script>
+  </body>
+</html>

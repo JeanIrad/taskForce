@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Picture - Details</title>
+    <style>
+      * {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        width: 100%;
+        min-height: 100vh;
+        background-color: #080808f0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        gap: 0.5rem;
+        color: #fefefe;
+      }
+      img {
+        max-width: 80%;
+        border-radius: 0.5rem;
+      }
+      p {
+        font-size: 1.1rem;
+      }
+      #location {
+        color: grey;
+        font-size: 0.9rem;
+      }
+      @media (max-width: 640px) {
+        img {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello world</h1>
+    <img src="" alt="" />
+    <p id="location">Location</p>
+    <p id="description">descrition</p>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const myGallery = JSON.parse(localStorage.getItem("gallery"));
+        const params = new URLSearchParams(location.search);
+        const img = document.querySelector("img");
+        const title = document.querySelector("h1");
+        const country = document.querySelector("#location");
+        const description = document.querySelector("#description");
+        const id = params.get("id");
+        const staticId = isNaN(id) === true ? id : "";
+
+        console.log(staticId);
+
+        switch (staticId) {
+          case "baboon":
+            arguments(
+              (img.src = "./images/3.png"),
+              (country.textContent = "South Africa"),
+              (title.textContent = "COMMON BROWN BABOON"),
+              (description.textContent =
+                "Baboons, belonging to the genus Papio, are among the most intriguing of Old World monkeys. Known for their intelligence, complex social systems, and adaptability, these primates provide valuable insights into primate behavior and social evolution. Spread across various regions of Africa, baboons have developed unique adaptations to thrive in diverse environments, making them a fascinating subject of study. This essay delves into the physical characteristics, social structures, habitats, diets, reproduction, and conservation status of baboons, painting a comprehensive picture of these remarkable animals")
+            );
+          case "whale":
+            arguments(
+              (img.src = "./images/4.png"),
+              (title.textContent = "HUMPBACK WHALE"),
+              (country.textContent = "South Africa"),
+              (description.textContent =
+                "Whales, the colossal denizens of the deep, have long fascinated humans with their immense size, intelligence, and grace. Belonging to the order Cetacea, which includes dolphins and porpoises, whales are a diverse group of marine mammals with species ranging from the massive blue whale to the agile and acrobatic humpback whale. This essay explores the physical characteristics, behavior, habitats, diets, reproductive strategies, and conservation status of whales, offering a comprehensive understanding of these magnificent creatures")
+            );
+          case "fox":
+            arguments(
+              (img.src = "./images/1.png"),
+              (title.textContent = "SPOTTED DEER"),
+              (country.textContent = "India"),
+              (description.textContent =
+                "Foxes are a group of small to medium-sized, omnivorous mammals belonging to the family Canidae, which also includes wolves, dogs, and other similar species. With their distinctive appearance, cunning behavior, and wide distribution, foxes have captured the imagination and fascination of humans for centuries. This essay delves into the physical characteristics, behavior, habitat, diet, reproductive habits, and conservation status of foxes, highlighting the life of these adaptable and intelligent animals")
+            );
+          case "deer":
+            arguments(
+              (img.src = "./images/2.png"),
+              (title.textContent = "SPOTTED DEER"),
+              (country.textContent = "Amazon"),
+              (description.textContent =
+                "Spotted deer, also known as chital or axis deer (Axis axis), are among the most visually striking and graceful members of the deer family. Native to the Indian subcontinent, these deer are renowned for their distinctive coat patterns and elegant appearance. This essay delves into the physical characteristics, behavior, habitat, diet, reproduction, and conservation status of the spotted deer, offering a comprehensive understanding of these enchanting animals.")
+            );
+          default:
+            (title.textContent = "Description"), (img.src = "");
+          // (country.textContent = ""),
+          // (description.textContent = "");
+        }
+        // rendering photo with dynamic ids
+        const dynamicId = isNaN(id) === false ? id : "";
+        const photo = myGallery.find((img) => img.id === Number(dynamicId));
+        console.log(photo);
+        console.log(myGallery);
+
+        // if (!photo) alert("No Photo");
+        img.src = photo?.url;
+        title.textContent = photo?.title;
+        country.textContent = photo?.location;
+        description.textContent = photo?.description;
+      });
+    </script>
+  </body>
+</html>
