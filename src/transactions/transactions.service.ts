@@ -12,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
 import { Account } from 'src/accounts/entities/accounts.entity';
 import { User } from 'src/users/entities/users.entity';
+import { MinimunBalance } from 'src/constants';
 
 @Injectable()
 export class TransactionService {
@@ -45,6 +46,13 @@ export class TransactionService {
     if (transactionType === 'expense' && createTransactionDto.amount > 0) {
       if (account.balance < createTransactionDto.amount) {
         throw new BadRequestException(`Insufficient funds`);
+      }
+      if (account.balance - createTransactionDto.amount <= MinimunBalance) {
+        // await this.sendBudgetNotification(
+        //   user.email,
+        //   'You have reached the minimum balance in your account',
+        // );
+        // this needs to be implemented on frontend to check the budget and compare it with the expense amount.... then sends a notification.
       }
       account.balance -= createTransactionDto.amount;
     } else if (
@@ -102,12 +110,19 @@ export class TransactionService {
     endDate: Date,
     userId: string,
   ) {
-    return this.transactionRepository.find({
+    const transactions = await this.transactionRepository.find({
       where: {
         account: { user: { id: userId } },
         transactionDate: Between(startDate, endDate),
       },
       relations: ['account', 'account.user', 'category'],
     });
+    const expenses = transactions.filter(
+      (transaction) => transaction.type === 'expense',
+    );
+    const incomes = transactions.filter(
+      (transaction) => transaction.type === 'income',
+    );
+    return { expenses, incomes };
   }
 }
