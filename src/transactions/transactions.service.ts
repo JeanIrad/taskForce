@@ -82,6 +82,7 @@ export class TransactionService {
   async findAll(userId: string) {
     return this.transactionRepository.find({
       where: { account: { user: { id: userId } } },
+      relations: ['account', 'account.user', 'category'],
     });
   }
 
@@ -93,6 +94,7 @@ export class TransactionService {
   async findTransactionsByAccount(accountId: string, userId: string) {
     return this.transactionRepository.find({
       where: { account: { id: accountId, user: { id: userId } } },
+      relations: ['account', 'account.user', 'category'],
     });
   }
   async findTransactionsByDateRange(
@@ -105,7 +107,7 @@ export class TransactionService {
         account: { user: { id: userId } },
         transactionDate: Between(startDate, endDate),
       },
-      relations: ['account', 'account.user'],
+      relations: ['account', 'account.user', 'category'],
     });
   }
 }

@@ -18,7 +18,9 @@ export class BudgetsService {
 
   async create(createBudgetDto: CreateBudgetDto, userId: string) {
     const user = await this.userService.findOne(userId);
-    if (createBudgetDto.startDate > createBudgetDto.endDate) {
+    if (
+      new Date(createBudgetDto.startDate) > new Date(createBudgetDto.endDate)
+    ) {
       throw new BadRequestException(
         'Start date cannot be greater than end date',
       );
@@ -31,10 +33,10 @@ export class BudgetsService {
         'Notification threshold must be greater than 0',
       );
     }
-    if (createBudgetDto.startDate < new Date()) {
+    if (new Date(createBudgetDto.startDate) < new Date()) {
       throw new BadRequestException('Start date cannot be in the past');
     }
-    if (createBudgetDto.endDate < new Date()) {
+    if (new Date(createBudgetDto.endDate) < new Date()) {
       throw new BadRequestException('End date cannot be in the past');
     }
     const newBudget = this.budgetRepository.create({
@@ -53,10 +55,15 @@ export class BudgetsService {
 
   async findOne(id: string, userId: string) {
     const user = await this.userService.findOne(userId);
-    const budget = this.budgetRepository.findOne({ where: { id, user } });
+
+    const budget = await this.budgetRepository.findOne({
+      where: { id, user: { id: user.id } },
+      relations: ['user'],
+    });
     if (!budget) {
       throw new NotFoundException(`Budget with ID ${id} not found`);
     }
+
     return budget;
   }
 
