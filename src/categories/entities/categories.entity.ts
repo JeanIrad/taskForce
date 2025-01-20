@@ -1,4 +1,4 @@
-import { Transaction } from 'src/transactions/entities/transactions.entity';
+import { TransactionEntity } from 'src/transactions/entities/transactions.entity';
 import { User } from 'src/users/entities/users.entity';
 import {
   Entity,
@@ -29,8 +29,8 @@ export class Category {
   @OneToMany(() => Category, (category) => category.parent)
   subcategories: Category[];
 
-  @OneToMany(() => Transaction, (transaction) => transaction.category)
-  transactions: Transaction[];
+  @OneToMany(() => TransactionEntity, (transaction) => transaction.category)
+  transactions: TransactionEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

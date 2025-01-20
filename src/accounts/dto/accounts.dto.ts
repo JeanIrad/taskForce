@@ -19,12 +19,5 @@ export class CreateAccountDto {
   })
   @IsNumber()
   balance: number;
-
-  @ApiProperty({
-    description: 'ID of the user who owns the account',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
-  @IsUUID()
-  userId: string;
 }
 export class UpdateAccountDto extends PartialType(CreateAccountDto) {}

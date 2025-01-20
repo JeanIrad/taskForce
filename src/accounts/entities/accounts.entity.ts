@@ -1,4 +1,4 @@
-import { Transaction } from 'src/transactions/entities/transactions.entity';
+import { TransactionEntity } from 'src/transactions/entities/transactions.entity';
 import { User } from 'src/users/entities/users.entity';
 import {
   Entity,
@@ -27,8 +27,8 @@ export class Account {
   @ManyToOne(() => User, (user) => user.accounts, { onDelete: 'CASCADE' })
   user: User;
 
-  @OneToMany(() => Transaction, (transaction) => transaction.account)
-  transactions: Transaction[];
+  @OneToMany(() => TransactionEntity, (transaction) => transaction.account)
+  transactions: TransactionEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

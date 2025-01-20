@@ -7,17 +7,18 @@ import {
 } from 'typeorm';
 import { Account } from 'src/accounts/entities/accounts.entity';
 import { Category } from 'src/categories/entities/categories.entity';
+import { TransactionType } from 'src/enums/transactions.enum';
 
 @Entity('transactions')
-export class Transaction {
+export class TransactionEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('decimal', { precision: 12, scale: 2 })
   amount: number;
 
-  @Column()
-  type: string; // "income" or "expense"
+  @Column({ enum: TransactionType, default: TransactionType.EXPENSE })
+  type: TransactionType;
 
   @Column()
   description: string;

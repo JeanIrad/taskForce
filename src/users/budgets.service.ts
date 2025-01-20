@@ -1,45 +1,86 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateBudgetDto, UpdateBudgetDto } from './dto/budgets.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Budget } from './entities/budgets.entity';
+import { Repository } from 'typeorm';
+import { UsersService } from './users.service';
 
 @Injectable()
 export class BudgetsService {
-  private budgets = [];
+  constructor(
+    @InjectRepository(Budget) private budgetRepository: Repository<Budget>,
+    private readonly userService: UsersService,
+  ) {}
 
-  create(createBudgetDto: CreateBudgetDto) {
-    const newBudget = { id: Date.now(), ...createBudgetDto };
-    this.budgets.push(newBudget);
-    return newBudget;
+  async create(createBudgetDto: CreateBudgetDto, userId: string) {
+    const user = await this.userService.findOne(userId);
+    if (createBudgetDto.startDate > createBudgetDto.endDate) {
+      throw new BadRequestException(
+        'Start date cannot be greater than end date',
+      );
+    }
+    if (createBudgetDto.amount <= 0) {
+      throw new BadRequestException('Budget amount must be greater than 0');
+    }
+    if (createBudgetDto.notificationThreshold <= 0) {
+      throw new BadRequestException(
+        'Notification threshold must be greater than 0',
+      );
+    }
+    if (createBudgetDto.startDate < new Date()) {
+      throw new BadRequestException('Start date cannot be in the past');
+    }
+    if (createBudgetDto.endDate < new Date()) {
+      throw new BadRequestException('End date cannot be in the past');
+    }
+    const newBudget = this.budgetRepository.create({
+      ...createBudgetDto,
+      user,
+    });
+    return await this.budgetRepository.save(newBudget);
   }
 
-  findAll() {
-    return this.budgets;
+  async findAll(userId: string) {
+    await this.userService.findOne(userId);
+    return await this.budgetRepository.find({
+      where: { user: { id: userId } },
+    });
   }
 
-  findOne(id: number) {
-    const budget = this.budgets.find((bgt) => bgt.id === id);
+  async findOne(id: string, userId: string) {
+    const user = await this.userService.findOne(userId);
+    const budget = this.budgetRepository.findOne({ where: { id, user } });
     if (!budget) {
       throw new NotFoundException(`Budget with ID ${id} not found`);
     }
     return budget;
   }
 
-  update(id: number, updateBudgetDto: UpdateBudgetDto) {
-    const budget = this.findOne(id);
+  async update(id: string, updateBudgetDto: UpdateBudgetDto, userId: string) {
+    const budget = await this.findOne(id, userId);
     Object.assign(budget, updateBudgetDto);
+    await this.budgetRepository.save(budget);
+
     return budget;
   }
 
-  remove(id: number) {
-    const index = this.budgets.findIndex((bgt) => bgt.id === id);
-    if (index === -1) {
-      throw new NotFoundException(`Budget with ID ${id} not found`);
-    }
-    this.budgets.splice(index, 1);
+  async remove(id: string, userId: string) {
+    const budget = await this.findOne(id, userId);
+    await this.budgetRepository.remove(budget);
+
     return { message: `Budget with ID ${id} deleted` };
   }
 
-  checkBudget(budgetId: number, expense: number): boolean {
-    const budget = this.findOne(budgetId);
-    return expense > budget.limit;
+  async isBudgetGreatThanExpense(
+    budgetId: string,
+    expense: number,
+    userId: string,
+  ): Promise<boolean> {
+    const budget = await this.findOne(budgetId, userId);
+    return expense > budget.amount;
   }
 }

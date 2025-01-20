@@ -6,12 +6,12 @@ export class CreateCategoryDto {
   @IsString()
   name: string;
 
-  @ApiProperty({
-    description: 'ID of the user who owns the category',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
-  @IsUUID()
-  userId: string;
+  // @ApiProperty({
+  //   description: 'ID of the user who owns the category',
+  //   example: '123e4567-e89b-12d3-a456-426614174000',
+  // })
+  // @IsUUID()
+  // userId: string;
 
   @ApiProperty({
     description: 'Parent category ID (if it is a subcategory)',

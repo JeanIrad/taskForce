@@ -1,40 +1,56 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAccountDto, UpdateAccountDto } from './dto/accounts.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Account } from './entities/accounts.entity';
+import { Repository } from 'typeorm';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AccountsService {
-  private accounts = []; // Replace with database logic.
+  constructor(
+    @InjectRepository(Account) private accountRepository: Repository<Account>,
+    private readonly userService: UsersService,
+  ) {}
 
-  create(createAccountDto: CreateAccountDto) {
-    const newAccount = { id: Date.now(), ...createAccountDto };
-    this.accounts.push(newAccount);
-    return newAccount;
+  async create(createAccountDto: CreateAccountDto, userId: string) {
+    const user = await this.userService.findOne(userId);
+
+    const account = this.accountRepository.create({
+      ...createAccountDto,
+      user,
+    });
+    return this.accountRepository.save(account);
   }
 
-  findAll() {
-    return this.accounts;
+  async findAll(userId: string) {
+    const user = await this.userService.findOne(userId);
+    return await this.accountRepository.find({
+      where: { user: { id: user.id } },
+    });
   }
 
-  findOne(id: number) {
-    const account = this.accounts.find((acc) => acc.id === id);
+  async findOne(id: string, userId: string) {
+    const user = await this.userService.findOne(userId);
+    const account = await this.accountRepository.findOneBy({ id, user });
     if (!account) {
       throw new NotFoundException(`Account with ID ${id} not found`);
     }
     return account;
   }
 
-  update(id: number, updateAccountDto: UpdateAccountDto) {
-    const account = this.findOne(id);
+  async update(id: string, updateAccountDto: UpdateAccountDto, userId: string) {
+    await this.userService.findOne(userId);
+    const account = await this.findOne(id, userId);
     Object.assign(account, updateAccountDto);
+    await this.accountRepository.save(account);
+
     return account;
   }
 
-  remove(id: number) {
-    const index = this.accounts.findIndex((acc) => acc.id === id);
-    if (index === -1) {
-      throw new NotFoundException(`Account with ID ${id} not found`);
-    }
-    this.accounts.splice(index, 1);
+  async remove(id: string, userId: string) {
+    await this.userService.findOne(userId);
+    const account = await this.findOne(id, userId);
+    await this.accountRepository.remove(account);
     return { message: `Account with ID ${id} deleted` };
   }
 }
